@@ -1,11 +1,11 @@
-name: Hello Workflow
+name: Pytest Workflow
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  run-script:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.9"
 
       - name: Install pytest
         run: pip install pytest
@@ -24,4 +24,4 @@ jobs:
         run: python3 hello.py
 
       - name: Run tests
-        run: python3 -m pytest
+        run: pytest
