@@ -12,6 +12,8 @@ services:
       retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
     restart: unless-stopped
 
   web:
@@ -30,7 +32,25 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-local-development-password}
     ports:
       - "8080:8080"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://localhost:8080/health', timeout=2)
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - app_network
     restart: unless-stopped
 
 volumes:
   postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
